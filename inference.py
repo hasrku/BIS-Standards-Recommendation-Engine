@@ -61,7 +61,7 @@ def process_queries(input_file, output_file):
         user_query = item["query"]
 
         # 1. Hybrid Retrieval (Get top 15-20 candidates)
-        candidate_indices = get_hybrid_top_k(user_query, k=10)
+        candidate_indices = get_hybrid_top_k(user_query, k=15)
 
         # 2. Reranking (Score query against each candidate chunk directly)
         cross_inp = [[user_query, chunks[idx]["content"]]

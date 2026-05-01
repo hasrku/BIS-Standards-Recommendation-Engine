@@ -1,11 +1,14 @@
 import re
 import json
+import os
 
 
 def clean_standard_id(raw_id):
     """Normalizes the ID to exactly match the hackathon's eval script."""
     clean = re.sub(r'\s+', ' ', raw_id).strip()
     clean = re.sub(r'\s*:\s*', ': ', clean)
+    # Fix the uppercase/lowercase "Part" issue so the JSON matches exactly
+    clean = clean.upper().replace('PART', 'Part')
     return clean
 
 
@@ -24,7 +27,7 @@ def clean_content(text):
     return text.strip()
 
 
-def chunk_bis_markdown(file_path, output_json="bis_chunks.json"):
+def chunk_bis_markdown(file_path, output_json):
     print(f"Reading {file_path}...")
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
@@ -33,7 +36,8 @@ def chunk_bis_markdown(file_path, output_json="bis_chunks.json"):
     pattern = r"(IS\s+\d+(?:\s*\(\s*Part\s*\d+\s*\))?\s*:\s*\d{4})"
 
     print("Slicing document by Standard ID...")
-    parts = re.split(pattern, content)
+    # Add flags=re.IGNORECASE to ensure we catch "(PART 2)" from the OCR
+    parts = re.split(pattern, content, flags=re.IGNORECASE)
 
     chunks = []
 
@@ -62,5 +66,8 @@ def chunk_bis_markdown(file_path, output_json="bis_chunks.json"):
 
 
 if __name__ == "__main__":
-    # Ensure this matches the exact name of your downloaded markdown file
-    chunk_bis_markdown("dataset.md")
+    # Ensure this targets the files inside the 'data' folder
+    input_file = os.path.join("data", "dataset.md")
+    output_file = os.path.join("data", "bis_chunks.json")
+
+    chunk_bis_markdown(input_file, output_file)
