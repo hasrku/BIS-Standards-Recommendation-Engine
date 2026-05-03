@@ -78,28 +78,40 @@ _Note: As this was a one-time preprocessing step, the RAG pipeline begins its au
 1. Install Dependencies
 
 ```
-pip install -r requirements.txt
+python -m venv venv
 ```
 
 2. Run the fastapi server
 
 ```
+venv/Scripts/activate
+```
+
+3. Install Dependencies
+
+```
+pip install -r requirements.txt
+```
+
+4. Run the fastapi server
+
+```
 uvicorn main:app --reload
 ```
 
-3. Open the url in the browser
+5. Open the url in the browser
 
 ```
 http://localhost:8000
 ```
 
-4. Run Command Line Inference Pipeline
+6. Run Command Line Inference Pipeline
 
 ```
 python inference.py --input public_test_set.json --output team_results.json
 ```
 
-5. Evaluate Results
+7. Evaluate Results
 
 ```
 python eval_script.py --results team_results.json
