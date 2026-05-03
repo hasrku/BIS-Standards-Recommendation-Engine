@@ -109,4 +109,4 @@ python eval_script.py --results team_results.json
 
 ## ▶️ Project Demo video
 
-🎥 Watch the 7-Minute Demo Video [Here](https://drive.google.com/file/d/1Zear87YEAS2A98rJM1C_E7hUW4zeU5CA/view?usp=sharing).
+🎥 Watch the 7-Minute Demo Video [Here](https://drive.google.com/file/d/1MPUlSn97LUw2QUsz_cjyfgsf3Hp3hvW3/view?usp=sharing).
