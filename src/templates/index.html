@@ -1,0 +1,2098 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>BIS × IITT — Standard Retrieval</title>
+        <style>
+            :root {
+                --bg: #f7f5f2;
+                --surface: #ffffff;
+                --surface-2: #f0ede8;
+                --border: #e4e0d8;
+                --border-2: #d0cbbf;
+                --text-1: #1a1714;
+                --text-2: #5a5550;
+                --text-3: #9a948c;
+                --accent: #2d5be3;
+                --accent-bg: #edf1fd;
+                --accent-2: #1a3fa0;
+                --success: #1a7a4a;
+                --success-bg: #edf7f2;
+                --danger: #c0392b;
+                --gold: #b8860b;
+                --gold-bg: #fffbec;
+                --gold-border: #f0d070;
+                --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+                --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.04);
+                --radius: 14px;
+                --radius-sm: 8px;
+                --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                font-family: "DM Sans", "Segoe UI", sans-serif;
+                background: var(--bg);
+                color: var(--text-1);
+                min-height: 100vh;
+                line-height: 1.6;
+                font-size: 15px;
+            }
+
+            .page-wrap {
+                max-width: 960px;
+                margin: 0 auto;
+                padding: 0 24px 60px;
+            }
+
+            /* ── Header ── */
+            header {
+                padding: 48px 0 40px;
+                border-bottom: 1px solid var(--border);
+                margin-bottom: 30px;
+            }
+            .header-inner {
+                display: flex;
+                align-items: flex-end;
+                justify-content: space-between;
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+            .logo-group {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+            .logo-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 11px;
+                font-weight: 500;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--accent);
+                background: var(--accent-bg);
+                border: 1px solid #c4d1f9;
+                border-radius: 100px;
+                padding: 4px 12px;
+                width: fit-content;
+            }
+            .logo-badge::before {
+                content: "";
+                width: 6px;
+                height: 6px;
+                background: var(--accent);
+                border-radius: 50%;
+                animation: pulse 2s infinite;
+            }
+            @keyframes pulse {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.3;
+                }
+            }
+            h1 {
+                font-size: clamp(28px, 4vw, 40px);
+                font-weight: 600;
+                line-height: 1.15;
+                color: var(--text-1);
+                letter-spacing: -0.01em;
+            }
+            h1 span {
+                font-style: italic;
+                color: var(--accent);
+            }
+            .header-meta {
+                font-size: 13px;
+                color: var(--text-3);
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                white-space: nowrap;
+            }
+            .status-dot {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: #ccc;
+                transition: background var(--transition);
+            }
+            .status-dot.live {
+                background: #22c55e;
+            }
+
+            /* ── Tabs ── */
+            .tabs {
+                display: flex;
+                gap: 4px;
+                background: var(--surface-2);
+                border: 1px solid var(--border);
+                border-radius: 100px;
+                padding: 4px;
+                width: fit-content;
+                margin-bottom: 36px;
+            }
+            .tab-btn {
+                padding: 8px 20px;
+                border-radius: 100px;
+                border: none;
+                background: transparent;
+                font-size: 13.5px;
+                font-weight: 500;
+                color: var(--text-2);
+                cursor: pointer;
+                transition: all var(--transition);
+                display: flex;
+                align-items: center;
+                gap: 7px;
+            }
+            .tab-btn svg {
+                opacity: 0.6;
+            }
+            .tab-btn.active {
+                background: var(--surface);
+                color: var(--text-1);
+                box-shadow: var(--shadow-sm);
+            }
+            .tab-btn.active svg {
+                opacity: 1;
+            }
+            .tab-btn:hover:not(.active) {
+                color: var(--text-1);
+            }
+
+            /* ── Panels ── */
+            .panel {
+                display: none;
+            }
+            .panel.active {
+                display: block;
+                animation: fadeUp 0.25s ease;
+            }
+            @keyframes fadeUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* ── Card ── */
+            .card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 28px 28px 24px;
+                box-shadow: var(--shadow-sm);
+                margin-bottom: 20px;
+            }
+            .card-title {
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--text-3);
+                margin-bottom: 16px;
+            }
+
+            /* ── Query hint ── */
+            .query-hint {
+                display: flex;
+                align-items: flex-start;
+                gap: 8px;
+                margin-top: 10px;
+                padding: 10px 14px;
+                background: var(--accent-bg);
+                border: 1px solid #c4d1f9;
+                border-radius: var(--radius-sm);
+                font-size: 12.5px;
+                color: var(--accent);
+                transition: all var(--transition);
+            }
+            .query-hint .hint-icon {
+                font-size: 13px;
+                flex-shrink: 0;
+                margin-top: 1px;
+            }
+            .query-hint code {
+                background: rgba(45, 91, 227, 0.12);
+                border-radius: 4px;
+                padding: 1px 5px;
+                font-family: monospace;
+                font-size: 12px;
+            }
+            .query-mode-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 4px 11px;
+                border-radius: 100px;
+                font-size: 11.5px;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                margin-left: auto;
+                flex-shrink: 0;
+                transition: all var(--transition);
+            }
+            .query-mode-badge.single {
+                background: var(--success-bg);
+                color: var(--success);
+                border: 1px solid #a7e0c3;
+            }
+            .query-mode-badge.multi {
+                background: var(--gold-bg);
+                color: var(--gold);
+                border: 1px solid var(--gold-border);
+            }
+
+            /* ── Query counter chips ── */
+            .query-chips {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+                margin-top: 10px;
+                max-height: 80px;
+                overflow-y: auto;
+            }
+            .query-chip {
+                font-size: 11.5px;
+                color: var(--text-2);
+                background: var(--surface-2);
+                border: 1px solid var(--border);
+                border-radius: 100px;
+                padding: 3px 10px;
+                max-width: 200px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .query-chip-num {
+                font-family: monospace;
+                font-weight: 600;
+                color: var(--accent);
+                margin-right: 4px;
+            }
+
+            /* ── Form Controls ── */
+            .input-group {
+                display: flex;
+                gap: 10px;
+                align-items: flex-end;
+            }
+            textarea {
+                flex: 1;
+                font-size: 15px;
+                color: var(--text-1);
+                background: var(--bg);
+                border: 1.5px solid var(--border);
+                border-radius: var(--radius-sm);
+                padding: 13px 16px;
+                resize: none;
+                min-height: 80px;
+                transition: border-color var(--transition), box-shadow var(--transition);
+                line-height: 1.55;
+                font-family: "DM Sans", "Segoe UI", sans-serif;
+            }
+            textarea::placeholder {
+                color: var(--text-3);
+            }
+            textarea:focus {
+                outline: none;
+                border-color: var(--accent);
+                box-shadow: 0 0 0 3px rgba(45, 91, 227, 0.1);
+            }
+
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                padding: 12px 22px;
+                border-radius: var(--radius-sm);
+                border: none;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all var(--transition);
+                white-space: nowrap;
+            }
+            .btn-primary {
+                background: var(--accent);
+                color: #fff;
+                box-shadow: 0 2px 8px rgba(45, 91, 227, 0.25);
+            }
+            .btn-primary:hover {
+                background: var(--accent-2);
+                transform: translateY(-1px);
+            }
+            .btn-primary:active {
+                transform: translateY(0);
+            }
+            .btn-secondary {
+                background: var(--surface);
+                color: var(--text-1);
+                border: 1.5px solid var(--border);
+            }
+            .btn-secondary:hover {
+                border-color: var(--border-2);
+                background: var(--surface-2);
+            }
+            .btn-export {
+                background: var(--gold-bg);
+                color: var(--gold);
+                border: 1.5px solid var(--gold-border);
+                font-size: 13px;
+                padding: 9px 18px;
+            }
+            .btn-export:hover {
+                background: #fff8d6;
+                border-color: var(--gold);
+                transform: translateY(-1px);
+            }
+            .btn:disabled {
+                opacity: 0.45;
+                cursor: not-allowed;
+                transform: none !important;
+            }
+
+            /* ── Spinner ── */
+            .spinner {
+                width: 16px;
+                height: 16px;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                border-top-color: #fff;
+                border-radius: 50%;
+                animation: spin 0.7s linear infinite;
+                display: none;
+            }
+            .spinner.dark {
+                border-color: rgba(0, 0, 0, 0.15);
+                border-top-color: var(--text-2);
+            }
+            @keyframes spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            /* ── Progress ── */
+            .progress-wrap {
+                display: none;
+                flex-direction: column;
+                gap: 8px;
+                margin-top: 16px;
+            }
+            .progress-wrap.visible {
+                display: flex;
+            }
+            .progress-meta {
+                display: flex;
+                justify-content: space-between;
+                font-size: 12.5px;
+                color: var(--text-3);
+                font-family: monospace;
+            }
+            .progress-bar-bg {
+                height: 5px;
+                background: var(--border);
+                border-radius: 100px;
+                overflow: hidden;
+            }
+            .progress-bar-fill {
+                height: 100%;
+                background: var(--accent);
+                border-radius: 100px;
+                transition: width 0.3s ease;
+                width: 0%;
+            }
+
+            /* ── Results header ── */
+            .results-section {
+                margin-top: 28px;
+            }
+            .results-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 16px;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+            .results-title {
+                font-size: 20px;
+                font-weight: 600;
+            }
+            .latency-pill {
+                font-family: monospace;
+                font-size: 12px;
+                color: var(--text-3);
+                background: var(--surface-2);
+                border: 1px solid var(--border);
+                border-radius: 100px;
+                padding: 4px 12px;
+            }
+
+            /* ── Result cards (single query) ── */
+            .result-card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 18px 20px;
+                margin-bottom: 10px;
+                display: flex;
+                gap: 16px;
+                align-items: flex-start;
+                box-shadow: var(--shadow-sm);
+                animation: fadeUp 0.2s ease both;
+                transition: border-color var(--transition), box-shadow var(--transition);
+            }
+            .result-card:hover {
+                border-color: var(--border-2);
+                box-shadow: var(--shadow-md);
+            }
+            .result-card.top-match {
+                border: 2px solid var(--gold-border);
+                background: var(--gold-bg);
+                box-shadow: 0 4px 20px rgba(184, 134, 11, 0.12), 0 1px 4px rgba(0, 0, 0, 0.04);
+            }
+            .result-card.top-match:hover {
+                box-shadow: 0 6px 28px rgba(184, 134, 11, 0.18), 0 1px 6px rgba(0, 0, 0, 0.05);
+            }
+            .rank-badge {
+                flex-shrink: 0;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: monospace;
+                font-size: 13px;
+                font-weight: 500;
+                background: var(--surface-2);
+                color: var(--text-2);
+                border: 1px solid var(--border);
+            }
+            .result-card.top-match .rank-badge {
+                background: var(--gold);
+                color: #fff;
+                border-color: var(--gold);
+                font-size: 15px;
+                width: 36px;
+                height: 36px;
+                box-shadow: 0 2px 8px rgba(184, 134, 11, 0.35);
+            }
+            .result-body {
+                flex: 1;
+                min-width: 0;
+            }
+            .standard-id {
+                font-family: monospace;
+                font-size: 14px;
+                font-weight: 500;
+                color: var(--accent);
+                margin-bottom: 5px;
+            }
+            .result-card.top-match .standard-id {
+                font-size: 16px;
+                color: var(--accent-2);
+            }
+            .top-label {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                font-size: 10.5px;
+                font-weight: 700;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--gold);
+                margin-bottom: 6px;
+            }
+            .top-label svg {
+                width: 11px;
+                height: 11px;
+            }
+            .snippet {
+                font-size: 13px;
+                color: var(--text-2);
+                line-height: 1.55;
+            }
+            .result-card.top-match .snippet {
+                color: var(--text-1);
+                font-size: 13.5px;
+            }
+            .score-pill {
+                flex-shrink: 0;
+                font-family: monospace;
+                font-size: 11px;
+                color: var(--text-3);
+                padding: 3px 9px;
+                background: var(--surface-2);
+                border-radius: 100px;
+                border: 1px solid var(--border);
+                align-self: flex-start;
+            }
+            .result-card.top-match .score-pill {
+                background: rgba(184, 134, 11, 0.1);
+                color: var(--gold);
+                border-color: var(--gold-border);
+            }
+
+            /* ── Multi-query table ── */
+            .table-wrap {
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                overflow: hidden;
+                box-shadow: var(--shadow-sm);
+                margin-bottom: 8px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 13px;
+            }
+            thead {
+                background: var(--surface-2);
+                border-bottom: 1px solid var(--border);
+            }
+            th {
+                padding: 10px 14px;
+                text-align: left;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--text-3);
+            }
+            td {
+                padding: 11px 14px;
+                border-bottom: 1px solid var(--border);
+                vertical-align: top;
+                color: var(--text-1);
+            }
+            tr:last-child td {
+                border-bottom: none;
+            }
+            tr:hover td {
+                background: var(--bg);
+            }
+            .query-cell {
+                max-width: 220px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                color: var(--text-2);
+            }
+            .std-list {
+                display: flex;
+                flex-direction: column;
+                gap: 3px;
+            }
+            .std-tag {
+                font-family: monospace;
+                font-size: 11.5px;
+                color: var(--accent);
+                background: var(--accent-bg);
+                border-radius: 4px;
+                padding: 2px 7px;
+                width: fit-content;
+            }
+            .std-tag.expected {
+                background: var(--success-bg);
+                color: var(--success);
+            }
+            .mono-sm {
+                font-family: monospace;
+                font-size: 12px;
+                color: var(--text-3);
+            }
+            .row-processing td {
+                background: rgba(45, 91, 227, 0.03);
+            }
+            .row-done td {
+            }
+
+            /* ── Eval metrics (batch tab) ── */
+            .eval-section {
+                margin-top: 28px;
+                display: none;
+            }
+            .eval-section.visible {
+                display: block;
+                animation: fadeUp 0.25s ease;
+            }
+            .divider {
+                height: 1px;
+                background: var(--border);
+                margin: 36px 0;
+            }
+            .metrics-grid {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                gap: 16px;
+                margin-bottom: 28px;
+            }
+            .metric-card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 20px 18px;
+                position: relative;
+                overflow: hidden;
+            }
+            .metric-card::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: var(--accent);
+            }
+            .metric-card:nth-child(2)::after {
+                background: var(--gold);
+            }
+            .metric-card:nth-child(3)::after {
+                background: #64b5f6;
+            }
+            .metric-card:nth-child(4)::after {
+                background: #81c784;
+            }
+            .metric-card:nth-child(5)::after {
+                background: #ba68c8;
+            }
+            .metric-name {
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--text-3);
+                margin-bottom: 10px;
+            }
+            .metric-value {
+                font-size: 30px;
+                font-weight: 600;
+                line-height: 1;
+                color: var(--text-1);
+            }
+            .metric-sub {
+                font-size: 11.5px;
+                color: var(--text-3);
+                margin-top: 6px;
+            }
+
+            /* ── File Upload ── */
+            .upload-zone {
+                border: 2px dashed var(--border-2);
+                border-radius: var(--radius);
+                padding: 40px 24px;
+                text-align: center;
+                cursor: pointer;
+                transition: all var(--transition);
+                background: var(--bg);
+            }
+            .upload-zone:hover,
+            .upload-zone.drag-over {
+                border-color: var(--accent);
+                background: var(--accent-bg);
+            }
+            .upload-zone input[type="file"] {
+                display: none;
+            }
+            .upload-icon {
+                font-size: 32px;
+                margin-bottom: 10px;
+            }
+            .upload-label {
+                font-size: 15px;
+                font-weight: 500;
+                color: var(--text-2);
+                margin-bottom: 5px;
+            }
+            .upload-sub {
+                font-size: 12.5px;
+                color: var(--text-3);
+            }
+            .upload-filename {
+                display: none;
+                align-items: center;
+                gap: 8px;
+                margin-top: 14px;
+                padding: 8px 14px;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 100px;
+                font-size: 13px;
+                font-family: monospace;
+                color: var(--accent);
+                width: fit-content;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .upload-filename.visible {
+                display: inline-flex;
+            }
+
+            /* ── Error / Empty ── */
+            .empty-state {
+                text-align: center;
+                padding: 48px 24px;
+                color: var(--text-3);
+            }
+            .empty-state .icon {
+                font-size: 36px;
+                margin-bottom: 10px;
+            }
+            .empty-state p {
+                font-size: 14px;
+            }
+            .error-banner {
+                display: none;
+                align-items: center;
+                gap: 10px;
+                padding: 12px 16px;
+                background: #fef2f2;
+                border: 1px solid #fca5a5;
+                border-radius: var(--radius-sm);
+                font-size: 13.5px;
+                color: var(--danger);
+                margin-top: 14px;
+            }
+            .error-banner.visible {
+                display: flex;
+            }
+
+            /* ══════════════════════════════════
+               JSON EXPORT MODAL
+            ══════════════════════════════════ */
+            .modal-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(26, 23, 20, 0.55);
+                backdrop-filter: blur(4px);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.2s ease;
+            }
+            .modal-overlay.open {
+                opacity: 1;
+                pointer-events: all;
+            }
+            .modal-box {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                box-shadow: 0 24px 64px rgba(0, 0, 0, 0.18);
+                width: 100%;
+                max-width: 700px;
+                max-height: 80vh;
+                display: flex;
+                flex-direction: column;
+                transform: translateY(20px) scale(0.97);
+                transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+            .modal-overlay.open .modal-box {
+                transform: translateY(0) scale(1);
+            }
+            .modal-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 20px 24px 16px;
+                border-bottom: 1px solid var(--border);
+            }
+            .modal-title {
+                font-size: 16px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .modal-title-icon {
+                font-size: 18px;
+            }
+            .modal-actions {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .modal-close {
+                width: 32px;
+                height: 32px;
+                border-radius: 8px;
+                border: none;
+                background: var(--surface-2);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                color: var(--text-2);
+                transition: all var(--transition);
+            }
+            .modal-close:hover {
+                background: var(--border);
+                color: var(--text-1);
+            }
+            .modal-body {
+                flex: 1;
+                overflow-y: auto;
+                padding: 20px 24px;
+            }
+            .json-display {
+                background: #1a1714;
+                color: #e8e2d8;
+                font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+                font-size: 12.5px;
+                line-height: 1.7;
+                border-radius: var(--radius-sm);
+                padding: 20px;
+                overflow-x: auto;
+                white-space: pre;
+                tab-size: 2;
+                border: 1px solid #333;
+            }
+            /* JSON syntax highlighting */
+            .json-key {
+                color: #7dd3fc;
+            }
+            .json-str {
+                color: #86efac;
+            }
+            .json-num {
+                color: #fbbf24;
+            }
+            .json-bool {
+                color: #f472b6;
+            }
+            .json-null {
+                color: #94a3b8;
+            }
+            .modal-footer {
+                padding: 16px 24px;
+                border-top: 1px solid var(--border);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background: var(--surface-2);
+                border-radius: 0 0 var(--radius) var(--radius);
+            }
+            .modal-footer-meta {
+                font-size: 12px;
+                color: var(--text-3);
+                font-family: monospace;
+            }
+            .btn-download {
+                background: var(--accent);
+                color: #fff;
+                font-size: 13px;
+                padding: 9px 20px;
+                box-shadow: 0 2px 8px rgba(45, 91, 227, 0.25);
+            }
+            .btn-download:hover {
+                background: var(--accent-2);
+                transform: translateY(-1px);
+            }
+
+            /* ── Responsive ── */
+            @media (max-width: 700px) {
+                .page-wrap {
+                    padding: 0 16px 60px;
+                }
+                header {
+                    padding: 32px 0 28px;
+                }
+                .header-inner {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+                .input-group {
+                    flex-direction: column;
+                }
+                .metrics-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+                .modal-box {
+                    max-height: 90vh;
+                }
+            }
+            @media (max-width: 400px) {
+                .metrics-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- ══════════════════════════════════
+             JSON EXPORT MODAL
+        ══════════════════════════════════ -->
+        <div
+            class="modal-overlay"
+            id="jsonModal"
+            onclick="closeModalOnOverlay(event)"
+        >
+            <div class="modal-box">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <span class="modal-title-icon">📦</span>
+                        Export Results as JSON
+                    </div>
+                    <div class="modal-actions">
+                        <button
+                            class="modal-close"
+                            onclick="closeModal()"
+                            title="Close"
+                        >
+                            <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <line
+                                    x1="18"
+                                    y1="6"
+                                    x2="6"
+                                    y2="18"
+                                />
+                                <line
+                                    x1="6"
+                                    y1="6"
+                                    x2="18"
+                                    y2="18"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div
+                        class="json-display"
+                        id="jsonDisplay"
+                    ></div>
+                </div>
+                <div class="modal-footer">
+                    <div
+                        class="modal-footer-meta"
+                        id="jsonMeta"
+                    ></div>
+                    <button
+                        class="btn btn-download"
+                        onclick="downloadJson()"
+                    >
+                        <svg
+                            width="13"
+                            height="13"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line
+                                x1="12"
+                                y1="15"
+                                x2="12"
+                                y2="3"
+                            />
+                        </svg>
+                        Download JSON
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-wrap">
+            <!-- ── Header ── -->
+            <header>
+                <div class="header-inner">
+                    <div class="logo-group">
+                        <div class="logo-badge">BIS × IITT · RAG Pipeline</div>
+                        <h1>BIS Standards <span>Recommendation Engine</span></h1>
+                    </div>
+                    <div class="header-meta">
+                        <div
+                            class="status-dot"
+                            id="statusDot"
+                        ></div>
+                        <span id="statusLabel">Connecting…</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ── Tabs ── -->
+            <div class="tabs">
+                <button
+                    class="tab-btn active"
+                    onclick="switchTab('single', this)"
+                >
+                    <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <circle
+                            cx="11"
+                            cy="11"
+                            r="8"
+                        />
+                        <path d="M21 21l-4.35-4.35" />
+                    </svg>
+                    Text Input Query
+                </button>
+                <button
+                    class="tab-btn"
+                    onclick="switchTab('batch', this)"
+                >
+                    <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line
+                            x1="16"
+                            y1="13"
+                            x2="8"
+                            y2="13"
+                        />
+                        <line
+                            x1="16"
+                            y1="17"
+                            x2="8"
+                            y2="17"
+                        />
+                        <polyline points="10 9 9 9 8 9" />
+                    </svg>
+                    Batch Evaluation
+                </button>
+            </div>
+
+            <!-- ════════════════════════════════
+                 PANEL 1 — Single / Multi Query
+            ════════════════════════════════ -->
+            <div
+                id="panel-single"
+                class="panel active"
+            >
+                <div class="card">
+                    <div class="card-title">Query Input</div>
+                    <div class="input-group">
+                        <textarea
+                            id="queryInput"
+                            placeholder="e.g. What are the requirements for fire safety in commercial buildings?&#10;&#10;For multiple queries, separate them with a semicolon  ;  character"
+                            rows="3"
+                        ></textarea>
+                        <button
+                            class="btn btn-primary"
+                            id="queryBtn"
+                            onclick="runSingleQuery()"
+                        >
+                            <div
+                                class="spinner"
+                                id="querySpinner"
+                            ></div>
+                            <svg
+                                id="queryIcon"
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <line
+                                    x1="5"
+                                    y1="12"
+                                    x2="19"
+                                    y2="12"
+                                />
+                                <polyline points="12 5 19 12 12 19" />
+                            </svg>
+                            Search
+                        </button>
+                    </div>
+
+                    <!-- Dynamic hint + mode badge -->
+                    <div
+                        class="query-hint"
+                        id="queryHint"
+                    >
+                        <span class="hint-icon">💡</span>
+                        <span
+                            >Separate multiple queries with <code>;</code>
+                        
+                        <span
+                            class="query-mode-badge single"
+                            id="queryModeBadge"
+                            style="display: none"
+                        ></span>
+                    </div>
+
+                    <!-- Live query chips (shown when multi-query detected) -->
+                    <div
+                        class="query-chips"
+                        id="queryChips"
+                        style="display: none"
+                    ></div>
+
+                    <!-- Progress bar -->
+                    <div
+                        class="progress-wrap"
+                        id="singleProgressWrap"
+                    >
+                        <div class="progress-meta">
+                            <span id="singleProgressLabel">Processing…</span>
+                            <span id="singleProgressPct">0%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div
+                                class="progress-bar-fill"
+                                id="singleProgressFill"
+                            ></div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="error-banner"
+                        id="singleError"
+                    >
+                        <svg
+                            width="15"
+                            height="15"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <circle
+                                cx="12"
+                                cy="12"
+                                r="10"
+                            />
+                            <line
+                                x1="12"
+                                y1="8"
+                                x2="12"
+                                y2="12"
+                            />
+                            <line
+                                x1="12"
+                                y1="16"
+                                x2="12.01"
+                                y2="16"
+                            />
+                        </svg>
+                        <span id="singleErrorMsg"></span>
+                    </div>
+                </div>
+
+                <!-- ── SINGLE QUERY RESULTS (card view) ── -->
+                <div
+                    id="singleResults"
+                    class="results-section"
+                    style="display: none"
+                >
+                    <div class="results-header">
+                        <div class="results-title">Top Matches</div>
+                        <div
+                            class="latency-pill"
+                            id="latencyPill"
+                        >
+                            —
+                        </div>
+                    </div>
+                    <div id="resultCards"></div>
+                </div>
+
+                <!-- ── MULTI QUERY RESULTS (table view) ── -->
+                <div
+                    id="multiResults"
+                    class="results-section"
+                    style="display: none"
+                >
+                    <div class="results-header">
+                        <div class="results-title">Query Results</div>
+                        <button
+                            class="btn btn-export"
+                            id="exportJsonBtn"
+                            onclick="openJsonModal()"
+                            style="display: none"
+                        >
+                            <svg
+                                width="13"
+                                height="13"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                                <polyline points="16 17 12 21 8 17" />
+                                <line
+                                    x1="12"
+                                    y1="12"
+                                    x2="12"
+                                    y2="21"
+                                />
+                            </svg>
+                            Export JSON
+                        </button>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Query</th>
+                                    <th>Retrieved Top 3</th>
+                                    <th style="text-align: right">Time</th>
+                                </tr>
+                            </thead>
+                            <tbody id="multiTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div
+                    id="singlePlaceholder"
+                    class="empty-state"
+                >
+                    <div class="icon">🔍</div>
+                    <p>
+                        Enter a query above to retrieve the most relevant BIS standards.<br />
+                        <span style="font-size: 12px; margin-top: 4px; display: block"
+                            >Use <strong>;</strong> to search multiple queries at once.</span
+                        >
+                    </p>
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════
+                 PANEL 2 — Batch Evaluation
+            ════════════════════════════════ -->
+            <div
+                id="panel-batch"
+                class="panel"
+            >
+                <div class="card">
+                    <div class="card-title">Upload Test Dataset</div>
+                    <div
+                        class="upload-zone"
+                        id="uploadZone"
+                        onclick="document.getElementById('fileInput').click()"
+                    >
+                        <input
+                            type="file"
+                            id="fileInput"
+                            accept=".json"
+                            onchange="onFileSelect(event)"
+                        />
+                        <div class="upload-icon">📂</div>
+                        <div class="upload-label">Drop your JSON file here or click to browse</div>
+                        <div class="upload-sub">Format: <code>[{"id":…, "query":…, "expected_standards":[…]}]</code></div>
+                        <div
+                            class="upload-filename"
+                            id="uploadFilename"
+                        >
+                            <svg
+                                width="12"
+                                height="12"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                            </svg>
+                            <span id="filenameText"></span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center">
+                        <button
+                            class="btn btn-primary"
+                            id="batchBtn"
+                            onclick="runBatch()"
+                            disabled
+                        >
+                            <div
+                                class="spinner"
+                                id="batchSpinner"
+                            ></div>
+                            <svg
+                                id="batchIcon"
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                            </svg>
+                            Run Batch
+                        </button>
+                        <button
+                            class="btn btn-secondary"
+                            onclick="resetBatch()"
+                        >
+                            <svg
+                                width="13"
+                                height="13"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <polyline points="1 4 1 10 7 10" />
+                                <path d="M3.51 15a9 9 0 1 0 .49-3.5" />
+                            </svg>
+                            Reset
+                        </button>
+                    </div>
+
+                    <div
+                        class="progress-wrap"
+                        id="progressWrap"
+                    >
+                        <div class="progress-meta">
+                            <span id="progressLabel">Processing queries…</span>
+                            <span id="progressPct">0%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div
+                                class="progress-bar-fill"
+                                id="progressFill"
+                            ></div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="error-banner"
+                        id="batchError"
+                    >
+                        <svg
+                            width="15"
+                            height="15"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <circle
+                                cx="12"
+                                cy="12"
+                                r="10"
+                            />
+                            <line
+                                x1="12"
+                                y1="8"
+                                x2="12"
+                                y2="12"
+                            />
+                            <line
+                                x1="12"
+                                y1="16"
+                                x2="12.01"
+                                y2="16"
+                            />
+                        </svg>
+                        <span id="batchErrorMsg"></span>
+                    </div>
+                </div>
+
+                <div
+                    class="eval-section"
+                    id="evalSection"
+                >
+                    <div class="results-header">
+                        <div class="results-title">Evaluation Results</div>
+                    </div>
+                    <div
+                        class="metrics-grid"
+                        id="metricsGrid"
+                    ></div>
+
+                    <div class="divider"></div>
+
+                    <div class="results-header">
+                        <div class="results-title">Query Results</div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Query</th>
+                                    <th>Retrieved Standards</th>
+                                    <th>Expected</th>
+                                    <th style="text-align: right">Latency</th>
+                                </tr>
+                            </thead>
+                            <tbody id="batchTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div
+                    id="batchPlaceholder"
+                    class="empty-state"
+                >
+                    <div class="icon">📋</div>
+                    <p>Upload a JSON file to run batch retrieval and evaluate performance.</p>
+                </div>
+            </div>
+        </div>
+        <!-- /page-wrap -->
+
+        <script>
+            /* ══════════════════════════════════
+               STATE
+            ══════════════════════════════════ */
+            let batchResultsData = [];
+            let multiQueryResults = []; // holds results for the multi-query table
+            let selectedFile = null;
+            let _jsonPayload = null; // cached JSON string for export
+
+            /* ══════════════════════════════════
+               HEALTH CHECK
+            ══════════════════════════════════ */
+            async function checkHealth() {
+                try {
+                    const r = await fetch("/health");
+                    const d = await r.json();
+                    const dot = document.getElementById("statusDot");
+                    const lbl = document.getElementById("statusLabel");
+                    if (d.models_loaded) {
+                        dot.classList.add("live");
+                        lbl.textContent = "Models live";
+                    } else {
+                        lbl.textContent = "Loading models…";
+                        setTimeout(checkHealth, 2000);
+                    }
+                } catch {
+                    document.getElementById("statusLabel").textContent = "Offline";
+                }
+            }
+            checkHealth();
+
+            /* ══════════════════════════════════
+               TABS
+            ══════════════════════════════════ */
+            function switchTab(name, btn) {
+                document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+                document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+                document.getElementById("panel-" + name).classList.add("active");
+                btn.classList.add("active");
+            }
+
+            /* ══════════════════════════════════
+               DYNAMIC QUERY INPUT DETECTION
+            ══════════════════════════════════ */
+            const queryInputEl = document.getElementById("queryInput");
+            const queryHintEl = document.getElementById("queryHint");
+            const queryModeBadge = document.getElementById("queryModeBadge");
+            const queryChipsEl = document.getElementById("queryChips");
+
+            // queryInputEl.addEventListener("input", () => {
+            //     const raw = queryInputEl.value;
+            //     const parts = parseQueries(raw);
+
+            //     if (parts.length === 0) {
+            //         // empty
+            //         queryModeBadge.style.display = "none";
+            //         queryChipsEl.style.display = "none";
+            //     } else if (parts.length === 1) {
+            //         queryModeBadge.style.display = "inline-flex";
+            //         queryModeBadge.textContent = "Single query";
+            //         queryModeBadge.className = "query-mode-badge single";
+            //         queryChipsEl.style.display = "none";
+            //     } else {
+            //         queryModeBadge.style.display = "inline-flex";
+            //         queryModeBadge.textContent = `${parts.length} queries`;
+            //         queryModeBadge.className = "query-mode-badge multi";
+            //         // Show chips
+            //         queryChipsEl.style.display = "flex";
+            //         queryChipsEl.innerHTML = parts
+            //             .map(
+            //                 (q, i) =>
+            //                     `<span class="query-chip"><span class="query-chip-num">${i + 1}.</span>${escHtml(
+            //                         q.length > 40 ? q.slice(0, 40) + "…" : q
+            //                     )}</span>`
+            //             )
+            //             .join("");
+            //     }
+            // });
+
+            /* ══════════════════════════════════
+               PARSE QUERIES  (split on ";")
+            ══════════════════════════════════ */
+            function parseQueries(raw) {
+                return raw
+                    .split(";")
+                    .map((s) => s.trim())
+                    .filter((s) => s.length > 0);
+            }
+
+            /* ══════════════════════════════════
+               MAIN SEARCH HANDLER
+            ══════════════════════════════════ */
+            async function runSingleQuery() {
+                const raw = queryInputEl.value.trim();
+                if (!raw) return showError("singleError", "singleErrorMsg", "Please enter a query.");
+                hideError("singleError");
+
+                const queries = parseQueries(raw);
+
+                if (queries.length === 1) {
+                    await runOneQuery(queries[0]);
+                } else {
+                    await runMultiQuery(queries);
+                }
+            }
+
+            /* ── Single query → card view ── */
+            async function runOneQuery(query) {
+                setLoading("queryBtn", "querySpinner", "queryIcon", true);
+                hideSections();
+
+                // Show minimal progress
+                setSingleProgress(0, "Searching…", true);
+
+                try {
+                    const r = await fetch("/api/query", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ query }),
+                    });
+                    if (!r.ok) {
+                        const e = await r.json();
+                        throw new Error(e.detail || "Server error");
+                    }
+                    setSingleProgress(100, "Done", true);
+                    setTimeout(() => setSingleProgress(0, "", false), 600);
+                    renderSingleResults(await r.json());
+                } catch (e) {
+                    showError("singleError", "singleErrorMsg", e.message);
+                    document.getElementById("singlePlaceholder").style.display = "block";
+                    setSingleProgress(0, "", false);
+                } finally {
+                    setLoading("queryBtn", "querySpinner", "queryIcon", false);
+                }
+            }
+
+            /* ── Multiple queries → table view ── */
+            async function runMultiQuery(queries) {
+                setLoading("queryBtn", "querySpinner", "queryIcon", true);
+                hideSections();
+                multiQueryResults = [];
+
+                const total = queries.length;
+                setSingleProgress(0, `0 / ${total} queries processed`, true);
+
+                // Show table immediately (rows will populate)
+                const tbody = document.getElementById("multiTableBody");
+                tbody.innerHTML = "";
+                // Pre-populate skeleton rows
+                queries.forEach((q, i) => {
+                    const tr = document.createElement("tr");
+                    tr.id = `mrow-${i}`;
+                    tr.className = "row-processing";
+                    tr.innerHTML = `
+                        <td class="mono-sm">${i + 1}</td>
+                        <td class="query-cell" title="${escHtml(q)}">${escHtml(q)}</td>
+                        <td><span class="mono-sm" style="color:#ccc">—</span></td>
+                        <td style="text-align:right" class="mono-sm" style="color:#ccc">—</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                document.getElementById("multiResults").style.display = "block";
+
+                let anyError = false;
+
+                for (let i = 0; i < total; i++) {
+                    const q = queries[i];
+                    let result = { query: q, retrieved: [], latency: null, error: null };
+
+                    try {
+                        const r = await fetch("/api/query", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ query: q }),
+                        });
+                        if (!r.ok) {
+                            const e = await r.json();
+                            throw new Error(e.detail || "Server error");
+                        }
+                        const data = await r.json();
+                        result.retrieved = data.results.map((x) => ({ id: x.standard_id, score: x.score }));
+                        result.latency = data.latency_seconds;
+                    } catch (e) {
+                        result.error = e.message;
+                        anyError = true;
+                    }
+
+                    multiQueryResults.push(result);
+
+                    // Update this row
+                    const tr = document.getElementById(`mrow-${i}`);
+                    if (tr) {
+                        const top3 = result.retrieved.slice(0, 3);
+                        tr.className = "row-done";
+                        tr.innerHTML = `
+                            <td class="mono-sm">${i + 1}</td>
+                            <td class="query-cell" title="${escHtml(q)}">${escHtml(q)}</td>
+                            <td>
+                                <div class="std-list">
+                                    ${
+                                        top3.length
+                                            ? top3.map((s) => `<span class="std-tag">${escHtml(s.id)}</span>`).join("")
+                                            : `<span class="mono-sm">${result.error ? "⚠ Error" : "—"}</span>`
+                                    }
+                                    ${result.retrieved.length > 3 ? `<span class="mono-sm">+${result.retrieved.length - 3} more</span>` : ""}
+                                </div>
+                            </td>
+                            <td style="text-align:right" class="mono-sm">${result.latency != null ? result.latency + "s" : "—"}</td>
+                        `;
+                    }
+
+                    const processed = i + 1;
+                    setSingleProgress((processed / total) * 100, `${processed} / ${total} queries processed`, true);
+                }
+
+                // Finish
+                setTimeout(() => setSingleProgress(0, "", false), 800);
+                setLoading("queryBtn", "querySpinner", "queryIcon", false);
+
+                if (anyError) showError("singleError", "singleErrorMsg", "Some queries encountered errors. Partial results shown.");
+
+                // Show export button
+                document.getElementById("exportJsonBtn").style.display = "inline-flex";
+            }
+
+            /* ── Render single result cards ── */
+            function renderSingleResults(data) {
+                const container = document.getElementById("resultCards");
+                container.innerHTML = "";
+                data.results.forEach((item, i) => {
+                    const isTop = item.rank === 1;
+                    const card = document.createElement("div");
+                    card.className = "result-card" + (isTop ? " top-match" : "");
+                    card.style.animationDelay = `${i * 45}ms`;
+                    card.innerHTML = `
+                        <div class="rank-badge">${isTop ? "★" : item.rank}</div>
+                        <div class="result-body">
+                            ${
+                                isTop
+                                    ? `<div class="top-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Best Match</div>`
+                                    : ""
+                            }
+                            <div class="standard-id">${escHtml(item.standard_id)}</div>
+                            <div class="snippet">${escHtml(item.snippet)}${item.snippet.length >= 299 ? "…" : ""}</div>
+                        </div>
+                        <div class="score-pill">score: ${item.score.toFixed(3)}</div>
+                    `;
+                    container.appendChild(card);
+                });
+                document.getElementById("latencyPill").textContent = `⏱ ${data.latency_seconds}s`;
+                document.getElementById("singleResults").style.display = "block";
+            }
+
+            function hideSections() {
+                document.getElementById("singleResults").style.display = "none";
+                document.getElementById("multiResults").style.display = "none";
+                document.getElementById("singlePlaceholder").style.display = "none";
+                document.getElementById("exportJsonBtn").style.display = "none";
+            }
+
+            /* ── Keyboard shortcut ── */
+            queryInputEl.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) runSingleQuery();
+            });
+
+            /* ══════════════════════════════════
+               SINGLE PROGRESS HELPERS
+            ══════════════════════════════════ */
+            function setSingleProgress(pct, label, visible) {
+                const wrap = document.getElementById("singleProgressWrap");
+                if (!visible) {
+                    wrap.classList.remove("visible");
+                    return;
+                }
+                wrap.classList.add("visible");
+                document.getElementById("singleProgressFill").style.width = pct + "%";
+                document.getElementById("singleProgressPct").textContent = Math.round(pct) + "%";
+                if (label) document.getElementById("singleProgressLabel").textContent = label;
+            }
+
+            /* ══════════════════════════════════
+               JSON MODAL
+            ══════════════════════════════════ */
+            function openJsonModal() {
+                // Build payload
+                const payload = multiQueryResults.map((r, i) => ({
+                    id: i + 1,
+                    query: r.query,
+                    retrieved_top5: r.retrieved.slice(0, 5).map((s, rank) => ({
+                        rank: rank + 1,
+                        standard_id: s.id,
+                        score: s.score,
+                    })),
+                    time_seconds: r.latency,
+                    error: r.error || undefined,
+                }));
+                _jsonPayload = JSON.stringify(payload, null, 2);
+
+                // Syntax highlight + render
+                document.getElementById("jsonDisplay").innerHTML = syntaxHighlight(_jsonPayload);
+                document.getElementById("jsonMeta").textContent = `${multiQueryResults.length} quer${
+                    multiQueryResults.length === 1 ? "y" : "ies"
+                } · ${_jsonPayload.length.toLocaleString()} chars`;
+
+                document.getElementById("jsonModal").classList.add("open");
+                document.body.style.overflow = "hidden";
+            }
+
+            function closeModal() {
+                document.getElementById("jsonModal").classList.remove("open");
+                document.body.style.overflow = "";
+            }
+
+            function closeModalOnOverlay(e) {
+                if (e.target === document.getElementById("jsonModal")) closeModal();
+            }
+
+            function downloadJson() {
+                if (!_jsonPayload) return;
+                const blob = new Blob([_jsonPayload], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `bis_query_results_${Date.now()}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            /* Syntax highlighting for JSON */
+            function syntaxHighlight(json) {
+                json = json.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                return json.replace(
+                    /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+                    (match) => {
+                        let cls = "json-num";
+                        if (/^"/.test(match)) {
+                            cls = /:$/.test(match) ? "json-key" : "json-str";
+                        } else if (/true|false/.test(match)) {
+                            cls = "json-bool";
+                        } else if (/null/.test(match)) {
+                            cls = "json-null";
+                        }
+                        return `<span class="${cls}">${match}</span>`;
+                    }
+                );
+            }
+
+            /* ══════════════════════════════════
+               FILE UPLOAD (Batch tab)
+            ══════════════════════════════════ */
+            function onFileSelect(e) {
+                selectedFile = e.target.files[0];
+                if (!selectedFile) return;
+                document.getElementById("filenameText").textContent = selectedFile.name;
+                document.getElementById("uploadFilename").classList.add("visible");
+                document.getElementById("batchBtn").disabled = false;
+            }
+
+            const zone = document.getElementById("uploadZone");
+            zone.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                zone.classList.add("drag-over");
+            });
+            zone.addEventListener("dragleave", () => zone.classList.remove("drag-over"));
+            zone.addEventListener("drop", (e) => {
+                e.preventDefault();
+                zone.classList.remove("drag-over");
+                const file = e.dataTransfer.files[0];
+                if (file && file.name.endsWith(".json")) {
+                    selectedFile = file;
+                    document.getElementById("filenameText").textContent = file.name;
+                    document.getElementById("uploadFilename").classList.add("visible");
+                    document.getElementById("batchBtn").disabled = false;
+                }
+            });
+
+            /* ══════════════════════════════════
+               BATCH RUN
+            ══════════════════════════════════ */
+            async function runBatch() {
+                if (!selectedFile) return;
+                hideError("batchError");
+                document.getElementById("batchPlaceholder").style.display = "none";
+                document.getElementById("evalSection").classList.remove("visible");
+                setLoading("batchBtn", "batchSpinner", "batchIcon", true);
+
+                let queries;
+                try {
+                    const text = await selectedFile.text();
+                    queries = JSON.parse(text);
+                    if (!Array.isArray(queries) || !queries.length) throw new Error("JSON must be a non-empty array.");
+                } catch (e) {
+                    showError("batchError", "batchErrorMsg", "Invalid JSON file: " + e.message);
+                    document.getElementById("batchPlaceholder").style.display = "block";
+                    setLoading("batchBtn", "batchSpinner", "batchIcon", false);
+                    return;
+                }
+
+                const total = queries.length;
+                const pw = document.getElementById("progressWrap");
+                pw.classList.add("visible");
+                setBatchProgress(0, `0 / ${total} queries processed`);
+
+                const results = [];
+                let batchFailed = false;
+
+                for (let i = 0; i < total; i++) {
+                    const q = queries[i];
+                    try {
+                        const r = await fetch("/api/query", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ query: q.query }),
+                        });
+                        if (!r.ok) {
+                            const e = await r.json();
+                            throw new Error(e.detail || "Server error");
+                        }
+                        const data = await r.json();
+                        results.push({
+                            id: q.id ?? i + 1,
+                            query: q.query,
+                            expected_standards: q.expected_standards || [],
+                            retrieved_standards: data.results.map((x) => x.standard_id),
+                            latency_seconds: data.latency_seconds,
+                        });
+                    } catch (e) {
+                        results.push({
+                            id: q.id ?? i + 1,
+                            query: q.query,
+                            expected_standards: q.expected_standards || [],
+                            retrieved_standards: [],
+                            latency_seconds: 0,
+                            error: e.message,
+                        });
+                        batchFailed = true;
+                    }
+                    const processed = i + 1;
+                    setBatchProgress((processed / total) * 100, `${processed} / ${total} queries processed`);
+                }
+
+                setTimeout(() => pw.classList.remove("visible"), 600);
+                batchResultsData = results;
+                setLoading("batchBtn", "batchSpinner", "batchIcon", false);
+
+                if (batchFailed) showError("batchError", "batchErrorMsg", "Some queries failed. Partial results shown.");
+
+                autoEvaluate(results);
+            }
+
+            async function autoEvaluate(results) {
+                try {
+                    const r = await fetch("/api/evaluate", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ results }),
+                    });
+                    if (!r.ok) {
+                        const e = await r.json();
+                        throw new Error(e.detail || "Evaluation failed.");
+                    }
+                    renderMetrics(await r.json(), results);
+                } catch {
+                    renderMetrics(computeMetricsLocally(results), results);
+                }
+            }
+
+            function computeMetricsLocally(results) {
+                const totalLatency = results.reduce((s, r) => s + (r.latency_seconds || 0), 0);
+                const avg = results.length ? totalLatency / results.length : 0;
+                let hitCount = 0,
+                    mrrSum = 0;
+                for (const r of results) {
+                    const expected = new Set((r.expected_standards || []).map((s) => s.trim().toLowerCase()));
+                    if (!expected.size) continue;
+                    const retrieved = (r.retrieved_standards || []).map((s) => s.trim().toLowerCase());
+                    if (retrieved.slice(0, 3).some((s) => expected.has(s))) hitCount++;
+                    const idx = retrieved.slice(0, 5).findIndex((s) => expected.has(s));
+                    if (idx !== -1) mrrSum += 1 / (idx + 1);
+                }
+                const evalCount = results.filter((r) => (r.expected_standards || []).length > 0).length || 1;
+                return { hit_rate_at_3: hitCount / evalCount, mrr_at_5: mrrSum / evalCount, avg_latency_seconds: avg };
+            }
+
+            function renderMetrics(m, results) {
+                const total = results.length;
+                const totalLatency = results.reduce((s, r) => s + (r.latency_seconds || 0), 0);
+                const defs = [
+                    { key: "hit_rate_at_3", label: "Hit Rate @3", sub: "≥1 relevant in top‑3", fmt: (v) => (v * 100).toFixed(1) + "%" },
+                    { key: "mrr_at_5", label: "MRR @5", sub: "Mean Reciprocal Rank", fmt: (v) => v.toFixed(4) },
+                    { key: "avg_latency_seconds", label: "Avg Latency", sub: "Per query (target < 5s)", fmt: (v) => v.toFixed(3) + "s" },
+                    { key: "_queries", label: "Queries", sub: "Total processed", fmt: () => String(total) },
+                    { key: "_total_time", label: "Total Time", sub: "Wall-clock batch time", fmt: () => totalLatency.toFixed(2) + "s" },
+                ];
+                document.getElementById("metricsGrid").innerHTML = defs
+                    .map(
+                        (d) =>
+                            `<div class="metric-card">
+                        <div class="metric-name">${d.label}</div>
+                        <div class="metric-value">${d.fmt(m[d.key])}</div>
+                        <div class="metric-sub">${d.sub}</div>
+                    </div>`
+                    )
+                    .join("");
+
+                const tbody = document.getElementById("batchTableBody");
+                tbody.innerHTML = "";
+                results.forEach((item, i) => {
+                    const tr = document.createElement("tr");
+                    const retrieved = item.retrieved_standards || [];
+                    const expected = item.expected_standards || [];
+                    tr.innerHTML = `
+                        <td class="mono-sm">${escHtml(String(item.id ?? i + 1))}</td>
+                        <td class="query-cell" title="${escHtml(item.query)}">${escHtml(item.query)}</td>
+                        <td>
+                            <div class="std-list">
+                                ${retrieved
+                                    .slice(0, 3)
+                                    .map((s) => `<span class="std-tag">${escHtml(s)}</span>`)
+                                    .join("")}
+                                ${retrieved.length > 3 ? `<span class="mono-sm">+${retrieved.length - 3} more</span>` : ""}
+                                ${retrieved.length === 0 ? '<span class="mono-sm">—</span>' : ""}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="std-list">
+                                ${
+                                    expected.length
+                                        ? expected
+                                              .slice(0, 2)
+                                              .map((s) => `<span class="std-tag expected">${escHtml(s)}</span>`)
+                                              .join("") + (expected.length > 2 ? `<span class="mono-sm">+${expected.length - 2}</span>` : "")
+                                        : '<span class="mono-sm">—</span>'
+                                }
+                            </div>
+                        </td>
+                        <td style="text-align:right" class="mono-sm">${item.latency_seconds ? item.latency_seconds + "s" : "—"}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                document.getElementById("evalSection").classList.add("visible");
+                document.getElementById("evalSection").scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
+
+            function resetBatch() {
+                selectedFile = null;
+                batchResultsData = [];
+                document.getElementById("fileInput").value = "";
+                document.getElementById("uploadFilename").classList.remove("visible");
+                document.getElementById("batchBtn").disabled = true;
+                document.getElementById("evalSection").classList.remove("visible");
+                document.getElementById("batchPlaceholder").style.display = "block";
+                document.getElementById("progressWrap").classList.remove("visible");
+                hideError("batchError");
+            }
+
+            /* ══════════════════════════════════
+               UTILITIES
+            ══════════════════════════════════ */
+            function setLoading(btnId, spinnerId, iconId, loading) {
+                document.getElementById(btnId).disabled = loading;
+                document.getElementById(spinnerId).style.display = loading ? "block" : "none";
+                document.getElementById(iconId).style.display = loading ? "none" : "block";
+            }
+
+            function setBatchProgress(pct, label) {
+                document.getElementById("progressFill").style.width = pct + "%";
+                document.getElementById("progressPct").textContent = Math.round(pct) + "%";
+                if (label) document.getElementById("progressLabel").textContent = label;
+            }
+
+            function showError(bannerId, msgId, msg) {
+                document.getElementById(bannerId).classList.add("visible");
+                document.getElementById(msgId).textContent = msg;
+            }
+            function hideError(id) {
+                document.getElementById(id).classList.remove("visible");
+            }
+
+            function escHtml(str) {
+                return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+            }
+
+            /* Close modal on Escape */
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") closeModal();
+            });
+        </script>
+    </body>
+</html>

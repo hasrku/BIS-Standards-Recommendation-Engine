@@ -2,7 +2,7 @@
 
 ![Hit Rate @3](https://img.shields.io/badge/Hit_Rate_@3-100%25-success)
 ![MRR @5](https://img.shields.io/badge/MRR_@5-0.95-success)
-![Avg Latency](https://img.shields.io/badge/Latency-1.73s-success)
+![Avg Latency](https://img.shields.io/badge/Latency-1.45s-success)
 
 _Note: used the input data : `public_test_set.json`._
 
@@ -10,7 +10,7 @@ This repository contains my submission for the **BIS Standards Recommendation En
 
 ---
 
-## System Architecture & Innovation
+## System Architecture
 
 To achieve sub-second latency with near-perfect accuracy, I bypassed slow LLM generation for standard extraction and implemented a **Dual-Retrieval + Reranking Architecture**:
 ![System Architecture](src/images/system_architecture.png)
@@ -24,6 +24,42 @@ To achieve sub-second latency with near-perfect accuracy, I bypassed slow LLM ge
    The combined pool of 15 candidates is fed into the lightning-fast `ms-marco-MiniLM-L-6-v2` Cross-Encoder. This model scores the query directly against the text of the chunks.
 4. **Deterministic Extraction:**
    Instead of asking an LLM to type out the standard (risking typos), our system uses pure Python logic to extract the `standard_id` directly from the metadata of the reranked chunks.
+
+---
+
+## 💻 Hardware & Environment Requirements
+
+This pipeline is highly optimized for offline, local execution. It does not require expensive cloud infrastructure or high-end GPUs to achieve sub-second latency.
+
+-   **Processor (CPU):** Any modern multi-core consumer CPU (Intel i3 / AMD Ryzen 3 or newer).
+-   **Graphics (GPU):** Not required. The architecture utilizes `faiss-cpu` and lightweight Hugging Face models.
+-   **Memory (RAM):** 4 GB minimum.
+-   **Storage:** ~1.2 GB .
+-   **OS:** Windows, macOS, or Linux.
+
+---
+
+## 📂 Repository Structure
+
+According to the hackathon guidelines, the repository is structured as follows:
+
+```
+├── /data                  # Processed JSON chunks, Vector/BM25 indexes, and dataset files
+├── /local_models          # Cached HuggingFace models for 100% offline execution
+│   ├── /embedder          # sentence-transformers/all-MiniLM-L6-v2
+│   └── /reranker          # cross-encoder/ms-marco-MiniLM-L-6-v2
+├── /src                   # Application logic and UI assets
+│   ├── /images            # Architecture and pipeline diagrams
+│   ├── /templates         # HTML templates for the web interface
+│   ├── chunker.py         # Custom regex-based intelligent document chunking
+│   └── indexer.py         # FAISS and BM25 index generation script
+├── eval_script.py         # Mandatory evaluation script provided by organizers
+├── inference.py           # Mandatory entry-point script for judges (CLI)
+├── main.py                # Web UI application logic
+├── presentation.pdf       # 8-slide presentation deck
+├── requirements.txt       # Environment dependencies
+└── README.md              # Project documentation
+```
 
 ---
 
@@ -45,14 +81,32 @@ _Note: As this was a one-time preprocessing step, the RAG pipeline begins its au
 pip install -r requirements.txt
 ```
 
-2. Run Inference Pipeline
+2. Run the fastapi server
+
+```
+uvicorn main:app --reload
+```
+
+3. Open the url in the browser
+
+```
+http://localhost:8000
+```
+
+4. Run Command Line Inference Pipeline
 
 ```
 python inference.py --input public_test_set.json --output team_results.json
 ```
 
-3. Evaluate Results
+5. Evaluate Results
 
 ```
 python eval_script.py --results team_results.json
 ```
+
+---
+
+## ▶️ Project Demo video
+
+🎥 Watch the 7-Minute Demo Video [Here](https://drive.google.com/file/d/1Zear87YEAS2A98rJM1C_E7hUW4zeU5CA/view?usp=sharing).
