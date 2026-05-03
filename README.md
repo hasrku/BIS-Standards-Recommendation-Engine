@@ -75,43 +75,49 @@ _Note: As this was a one-time preprocessing step, the RAG pipeline begins its au
 
 ## 💻 Setup & Execution Guide
 
-1. Install Dependencies
+1. Clone the Repo
+
+```
+git clone https://github.com/hasrku/BIS-Standards-Recommendation-Engine
+```
+
+2. Install Dependencies
 
 ```
 python -m venv venv
 ```
 
-2. Run the fastapi server
+3. Run the fastapi server
 
 ```
 venv/Scripts/activate
 ```
 
-3. Install Dependencies
+4. Install Dependencies
 
 ```
 pip install -r requirements.txt
 ```
 
-4. Run the fastapi server
+5. Run the fastapi server
 
 ```
 uvicorn main:app --reload
 ```
 
-5. Open the url in the browser
+6. Open the url in the browser
 
 ```
 http://localhost:8000
 ```
 
-6. Run Command Line Inference Pipeline
+7. Run Command Line Inference Pipeline
 
 ```
 python inference.py --input public_test_set.json --output team_results.json
 ```
 
-7. Evaluate Results
+8. Evaluate Results
 
 ```
 python eval_script.py --results team_results.json
