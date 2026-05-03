@@ -125,6 +125,49 @@ python eval_script.py --results team_results.json
 
 ---
 
+## 🚀 Usage & Input Data Format
+
+The recommendation engine can be accessed via two primary interfaces: a user-friendly Web UI and a high-throughput Command Line Interface (CLI).
+
+### 1. Web Interface (FastAPI)
+
+Run the application and navigate to **`http://localhost:8000`** in your browser. The web dashboard offers two modes of operation:
+
+-   **Quick Text Input:** Perfect for MSEs needing instant answers. You can enter a single product description or input multiple queries at once by separating them with a semicolon (`;`).
+    -   _Example:_ `33 Grade Ordinary Portland Cement ; precast concrete pipes`
+-   **Batch Query & Evaluation:** Designed for bulk processing and testing. Upload a JSON file formatted according to the hackathon's test set schema. The system will process all queries, evaluate the accuracy against the expected standards, and output the performance metrics.
+
+### 2. Command Line Interface (CLI)
+
+For automated testing and evaluation, you can run the batch pipeline directly from the terminal.
+
+Place your input JSON file in the root directory of the project and execute the inference script:
+
+```bash
+python inference.py --input public_test_set.json --output team_results.json
+```
+
+### 📄 Batch Input JSON Schema
+
+Whether you are uploading a file via the Web UI or running the CLI, your input JSON must strictly follow the format of the official `public_test_set.json`.
+
+It must be an array of objects containing an `id`, the `query` (product description), and the `expected_standards` (for evaluation scoring).
+
+**Input Format Skeleton:**
+
+```json
+[
+    {
+        "id": "String (e.g., 'PUB-01')",
+        "query": "String (Product description goes here...)",
+        "expected_standards": ["String (e.g., 'IS 269: 1989')"]
+    }
+    // ... additional query objects follow the exact same structure
+]
+```
+
+---
+
 ## ▶️ Project Demo video
 
 🎥 Watch the 7-Minute Demo Video [Here](https://drive.google.com/file/d/1MPUlSn97LUw2QUsz_cjyfgsf3Hp3hvW3/view?usp=sharing).
